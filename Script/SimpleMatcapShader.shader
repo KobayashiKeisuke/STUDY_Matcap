@@ -45,14 +45,15 @@ Shader "Custom/SimpleMatcapShader"
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
-				o.normal = float4(v.normal, 1);
+				o.normal = normalize( float4(v.normal, 1));
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 baseCol = tex2D( _MainTex, i.uv);
-				float2 normalVec = normalize( i.normal.xyz ) * 0.5 + 0.5;
+				// float2 normalVec = i.normal.xyz * 0.5 + 0.5;
+				float2 normalVec = i.normal.xyz;
 				fixed4 mapCapCol = tex2D( _MatCap, normalVec * _Range );
 				fixed4 col = lerp(baseCol, mapCapCol, _BlendRate );
 
